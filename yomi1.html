@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>あいうえお・ことばクイズ</title>
+    <style>
+        body { 
+            font-family: 'Hiragino Maru Gothic ProN', 'Yu Gothic', sans-serif; 
+            margin: 0; padding: 0; 
+            background-color: #f0fff0; /* さわやかな薄緑 */
+            overflow: hidden; 
+            width: 100vw; height: 100vh;
+            display: flex; flex-direction: column;
+            user-select: none;
+        }
+
+        /* メイン表示エリア */
+        #display_area { 
+            flex: 1; 
+            display: flex; justify-content: center; align-items: center; 
+            background-color: white; border-bottom: 5px solid #90ee90;
+            position: relative;
+            cursor: pointer;
+        }
+        #char_display { 
+            font-size: 200px; font-weight: bold; color: #ff6b6b; 
+        }
+        /* イラストと文字のセット */
+        #answer_display { 
+            display: none; 
+            align-items: center;
+            animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #emoji_part { font-size: 150px; margin-right: 30px; }
+        #text_part { font-size: 80px; font-weight: bold; color: #333; }
+
+        @keyframes pop {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+
+        #instruction { font-size: 32px; color: #888; position: absolute; text-align: center; }
+
+        /* キーボードエリア */
+        #keyboard_area { 
+            height: 45vh; 
+            padding: 15px; box-sizing: border-box;
+            background-color: #f0fff0;
+        }
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(10, 1fr); 
+            gap: 8px; height: 100%; max-width: 1100px; margin: 0 auto; 
+        }
+        button { 
+            padding: 0; font-size: 28px; font-weight: bold; cursor: pointer; 
+            border: none; border-radius: 12px; background-color: white;
+            color: #333; box-shadow: 0 4px #c1e1c1; transition: 0.1s;
+        }
+        button:active { box-shadow: none; transform: translateY(4px); background-color: #e0f0e0; }
+        button.active-btn { background-color: #c1e1c1; box-shadow: none; transform: translateY(2px); }
+        button:empty { visibility: hidden; }
+    </style>
+</head>
+<body>
+
+    <div id="display_area">
+        <div id="instruction">もじを タッチしてね</div>
+        <div id="char_display"></div>
+        <div id="answer_display">
+            <div id="emoji_part"></div>
+            <div id="text_part"></div>
+        </div>
+    </div>
+
+    <div id="keyboard_area">
+        <div class="grid" id="container"></div>
+    </div>
+
+    <script>
+        const data = [
+            {c:"あ", a:"🦆", t:"あひる"}, {c:"い", a:"🐶", t:"いぬ"}, {c:"う", a:"🐰", t:"うさぎ"}, {c:"え", a:"✏️", t:"えんぴつ"}, {c:"お", a:"🐺", t:"おおかみ"},
+            {c:"か", a:"🐸", t:"かえる"}, {c:"き", a:"🦊", t:"きつね"}, {c:"く", a:"🐻", t:"くま"}, {c:"け", a:"🍰", t:"けーき"}, {c:"こ", a:"🐨", t:"こあら"},
+            {c:"さ", a:"🐒", t:"さる"}, {c:"し", a:"🦌", t:"しか"}, {c:"す", a:"🍉", t:"すいか"}, {c:"せ", a:" Cicada", t:"せっけん"}, {c:"そ", a:"🍦", t:"そふとくりーむ"},
+            {c:"た", a:"🥚", t:"たまご"}, {c:"ち", a:"🦋", t:"ちょう"}, {c:"つ", a:"🌙", t:"つき"}, {c:"て", a:"✋", t:"て"}, {c:"と", a:"🐯", t:"とら"},
+            {c:"な", a:"🍲", t:"なべ"}, {c:"に", a:"🐔", t:"にわとり"}, {c:"ぬ", a:"🐶", t:"いぬ"}, {c:"ね", a:"🐱", t:"ねこ"}, {c:"の", a:"📒", t:"のーと"},
+            {c:"は", a:"🕊️", t:"はと"}, {c:"ひ", a:"🐑", t:"ひつじ"}, {c:"ふ", a:"🦉", t:"ふくろう"}, {c:"へ", a:"🐍", t:"へび"}, {c:"ほ", a:"📖", t:"ほん"},
+            {c:"ま", a:"🪟", t:"まど"}, {c:"み", a:"🍊", t:"みかん"}, {c:"む", a:"🐞", t:"むし"}, {c:"め", a:"👓", t:"めがね"}, {c:"も", a:"🍑", t:"もも"},
+            {c:"や", a:"🐐", t:"やぎ"}, {c:"", a:"", t:""},  {c:"ゆ", a:"⛄", t:"ゆき"}, {c:"", a:"", t:""},  {c:"よ", a:"⛵", t:"よっと"},
+            {c:"ら", a:"🦁", t:"らいおん"}, {c:"り", a:"🐿️", t:"りす"}, {c:"る", a:"🐸", t:"かえる"}, {c:"れ", a:"🍋", t:"れもん"}, {c:"ろ", a:"🚀", t:"ろけっと"},
+            {c:"わ", a:"🐊", t:"わに"}, {c:"", a:"", t:""},  {c:"", a:"", t:""},  {c:"", a:"", t:""},  {c:"ん", a:"🐼", t:"ぱんだ"}
+        ];
+
+        // セミの絵文字が環境により出ないため補正
+        data.find(d => d.c === "せ").a = "🧼"; // せっけん(代用) 
+
+        const container = document.getElementById('container');
+        const displayArea = document.getElementById('display_area');
+        const charDisplay = document.getElementById('char_display');
+        const answerDisplay = document.getElementById('answer_display');
+        const emojiPart = document.getElementById('emoji_part');
+        const textPart = document.getElementById('text_part');
+        const instruction = document.getElementById('instruction');
+
+        let currentItem = null;
+
+        function showAnswer() {
+            if (currentItem && answerDisplay.style.display === 'none') {
+                charDisplay.style.display = 'none';
+                emojiPart.textContent = currentItem.a;
+                textPart.textContent = currentItem.t;
+                answerDisplay.style.display = 'flex';
+            }
+        }
+
+        function showChar(item, btn) {
+            currentItem = item;
+            instruction.style.display = 'none';
+            answerDisplay.style.display = 'none';
+            charDisplay.textContent = item.c;
+            charDisplay.style.display = 'block';
+
+            const allBtns = document.querySelectorAll('.grid button');
+            allBtns.forEach(b => b.classList.remove('active-btn'));
+            btn.classList.add('active-btn');
+
+            speechSynthesis.cancel();
+            const uttr = new SpeechSynthesisUtterance(item.c);
+            uttr.lang = 'ja-JP';
+            speechSynthesis.speak(uttr);
+        }
+
+        displayArea.onclick = () => {
+            if (answerDisplay.style.display === 'none') {
+                showAnswer();
+            } else {
+                answerDisplay.style.display = 'none';
+                charDisplay.style.display = 'block';
+            }
+        };
+
+        data.forEach(item => {
+            const btn = document.createElement('button');
+            btn.textContent = item.c;
+            if (item.c) {
+                btn.onclick = (e) => {
+                    if (currentItem && currentItem.c === item.c && answerDisplay.style.display === 'none') {
+                        showAnswer();
+                    } else {
+                        showChar(item, btn);
+                    }
+                    e.stopPropagation();
+                };
+            }
+            container.appendChild(btn);
+        });
+    </script>
+</body>
+</html>

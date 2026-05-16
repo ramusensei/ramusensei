@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学習アプリリンク</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --bg-color: #f5f7f9;
+            --text-color: #333;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .category-section {
+            margin-bottom: 3rem;
+        }
+
+        .category-title {
+            border-left: 5px solid var(--primary-color);
+            padding-left: 10px;
+            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: inherit;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #eee;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-color: var(--primary-color);
+        }
+
+        .card-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .card-description {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #888;
+            font-size: 0.8rem;
+        }
+
+        /* 縦書きツールなどの自作ツール用特別枠 */
+        .highlight-card {
+            border: 2px solid #ffcc00;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>学習アプリリンク</h1>
+</header>
+
+<div class="container">
+    <!-- カテゴリ1: 言語・国語 -->
+    <section class="category-section">
+        <h2 class="category-title">国語・ライティング</h2>
+        <div class="grid">
+            <a href="#" class="card">
+                <div class="card-title">縦書き原稿用紙ツール</div>
+                <div class="card-description">IME対応のブラウザ上で書ける縦書き原稿用紙です。</div>
+            </a>
+            <a href="yomi.1" class="card">
+                <div class="card-title">ひらがな　読み練習アプリ</div>
+                <div class="card-description">ひらがなの読み練習ができます。</div>
+            </a>
+        </div>
+    </section>
+
+    <!-- カテゴリ2: 数学・技術 -->
+    <section class="category-section">
+        <h2 class="category-title">算数・数学・クリエイティブ</h2>
+        <div class="grid">
+            <a href="#" class="card">
+                <div class="card-title">計算トレーニング</div>
+                <div class="card-description">毎日5分、基礎計算のスピードアップを目指します。</div>
+            </a>
+            <a href="#" class="card">
+                <div class="card-title">編み図作成エディタ</div>
+                <div class="card-description">記号を配置してオリジナルの編み図を作成できます。</div>
+            </a>
+            <a href="#" class="card">
+                <div class="card-title">プログラミング基礎</div>
+                <div class="card-description">視覚的にコードの仕組みを学べるリンク集です。</div>
+            </a>
+        </div>
+    </section>
+
+    <!-- カテゴリ3: その他 -->
+    <section class="category-section">
+        <h2 class="category-title">外部学習サービス</h2>
+        <div class="grid">
+            <a href="https://www.khanacademy.org/" target="_blank" class="card">
+                <div class="card-title">Khan Academy</div>
+                <div class="card-description">世界中の良質な講義が無料で受けられるサイトです。</div>
+            </a>
+            <a href="#" class="card">
+                <div class="card-title">英単語クイズ</div>
+                <div class="card-description">ゲーム感覚で英単語の語彙力を増やせます。</div>
+            </a>
+        </div>
+    </section>
+</div>
+
+<footer>
+    &copy; 2026 学習アプリリンク
+</footer>
+
+</body>
+</html>
